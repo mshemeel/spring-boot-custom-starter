@@ -1,0 +1,5 @@
+META-INF/spring-configuration-metadata.json
+com/example/greeting/autoconfigure/GreetingAutoConfiguration.class
+com/example/greeting/autoconfigure/GreetingService.class
+META-INF/spring-autoconfigure-metadata.properties
+com/example/greeting/autoconfigure/GreetingProperties.class

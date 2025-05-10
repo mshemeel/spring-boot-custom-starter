@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "greeting",
+      "type": "com.example.greeting.autoconfigure.GreetingProperties",
+      "sourceType": "com.example.greeting.autoconfigure.GreetingProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "greeting.include-time",
+      "type": "java.lang.Boolean",
+      "description": "Whether to include the current time in the greeting.",
+      "sourceType": "com.example.greeting.autoconfigure.GreetingProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "greeting.message",
+      "type": "java.lang.String",
+      "description": "The greeting message to be displayed.",
+      "sourceType": "com.example.greeting.autoconfigure.GreetingProperties",
+      "defaultValue": "Hello"
+    }
+  ],
+  "hints": []
+}
