@@ -31,4 +31,34 @@ public class GreetingService {
         
         return greeting.toString();
     }
+    
+    /**
+     * Generate an authenticated greeting using the API key.
+     *
+     * @param name the name to greet
+     * @param apiKey the API key for authentication
+     * @return an authenticated greeting or an error message
+     */
+    public String authenticatedGreet(String name, String apiKey) {
+        // Verify the API key
+        if (properties.getApiKey() != null && 
+            properties.getApiKey().equals(apiKey)) {
+            
+            String message = properties.getCustomMessage();
+            if (message == null || message.isEmpty()) {
+                message = "Premium welcome";
+            }
+            
+            StringBuilder greeting = new StringBuilder(message + ", " + name + "!");
+            
+            if (properties.isIncludeTime()) {
+                greeting.append(" The current time is: ")
+                        .append(LocalDateTime.now().format(formatter));
+            }
+            
+            return greeting.toString();
+        }
+        
+        return "Invalid API key. Access denied.";
+    }
 } 

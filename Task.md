@@ -33,4 +33,16 @@
 ## Additional Tasks
 - [ ] Add additional features to the GreetingService
 - [ ] Add conditional beans based on application properties
-- [ ] Create more examples of usage 
+- [ ] Create more examples of usage
+
+## Docker and Kubernetes
+- [x] Create Dockerfile for the sample application
+- [x] Create Kubernetes deployment configuration
+- [x] Update README.md with Docker and Kubernetes instructions
+- [x] Add Kubernetes Secrets configuration
+- [x] Implement HorizontalPodAutoscaler for auto-scaling
+- [x] Update application to use Secret values
+- [x] Add authenticated greeting endpoints
+
+## Project Management
+- [x] Create .gitignore files to exclude build artifacts and IDE-specific files 

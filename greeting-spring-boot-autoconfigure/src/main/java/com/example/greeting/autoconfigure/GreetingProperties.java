@@ -17,6 +17,16 @@ public class GreetingProperties {
      * Whether to include the current time in the greeting.
      */
     private boolean includeTime = false;
+    
+    /**
+     * API key for greeting service (if required).
+     */
+    private String apiKey;
+    
+    /**
+     * Custom message for authenticated greetings.
+     */
+    private String customMessage;
 
     public String getMessage() {
         return message;
@@ -32,5 +42,21 @@ public class GreetingProperties {
 
     public void setIncludeTime(boolean includeTime) {
         this.includeTime = includeTime;
+    }
+    
+    public String getApiKey() {
+        return apiKey;
+    }
+    
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+    
+    public String getCustomMessage() {
+        return customMessage;
+    }
+    
+    public void setCustomMessage(String customMessage) {
+        this.customMessage = customMessage;
     }
 } 

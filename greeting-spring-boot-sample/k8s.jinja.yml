@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: greeting-secret
+type: Opaque
+data:
+  # These values are base64 encoded
+  # greeting.api-key: "U2VjcmV0R3JlZXRpbmdBcGlLZXk=" (SecretGreetingApiKey)
+  greeting.api-key: U2VjcmV0R3JlZXRpbmdBcGlLZXk=
+  greeting.custom-message: UHJpdmF0ZVdlbGNvbWVNZXNzYWdl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greeting-app
+  labels:
+    app: greeting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greeting-app
+  template:
+    metadata:
+      labels:
+        app: greeting-app
+    spec:
+      containers:
+      - name: greeting-app
+        image: greeting-spring-boot-sample:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            cpu: "0.2"
+            memory: "256Mi"
+        env:
+        - name: GREETING_MESSAGE
+          valueFrom:
+            secretKeyRef:
+              name: greeting-secret
+              key: greeting.custom-message
+        - name: GREETING_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: greeting-secret
+              key: greeting.api-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeting-service
+spec:
+  selector:
+    app: greeting-app
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: greeting-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: greeting-app
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80 

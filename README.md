@@ -114,6 +114,103 @@ mvn spring-boot:run
 
 Then access the greeting endpoint at: http://localhost:8080/greet/YourName
 
+## Running in Docker and Kubernetes
+
+### Docker
+
+To build and run the application in Docker:
+
+1. Build the parent project first:
+```bash
+mvn clean install
+```
+
+2. Build the Docker image:
+```bash
+cd greeting-spring-boot-sample
+docker build -t greeting-spring-boot-sample:latest .
+```
+
+3. Run the container:
+```bash
+docker run -p 8080:8080 greeting-spring-boot-sample:latest
+```
+
+Access the application at: http://localhost:8080/greet/YourName
+
+### Kubernetes (Docker Desktop)
+
+To deploy the application to Kubernetes running in Docker Desktop:
+
+1. Build the Docker image (if not already built):
+```bash
+cd greeting-spring-boot-sample
+docker build -t greeting-spring-boot-sample:latest .
+```
+
+2. Apply the Kubernetes configuration:
+```bash
+kubectl apply -f k8s.jinja.yml
+```
+
+3. Check the deployment status:
+```bash
+kubectl get deployments
+kubectl get pods
+kubectl get services
+kubectl get secrets
+kubectl get hpa
+```
+
+4. Access the application:
+   - The service is exposed as LoadBalancer type
+   - With Docker Desktop Kubernetes, it will be available at: http://localhost/greet/YourName
+   - Note: The service maps port 80 to the application's port 8080
+
+5. For secure endpoints, you'll need to provide the API key in the header:
+```bash
+curl -H "API-Key: SecretGreetingApiKey" http://localhost/secure-greet/YourName
+```
+
+6. To delete the deployment:
+```bash
+kubectl delete -f k8s.jinja.yml
+```
+
+### Kubernetes Secrets
+
+The application is configured to use Kubernetes Secrets for sensitive configuration:
+
+- `greeting.api-key`: Used for authenticated greetings
+- `greeting.custom-message`: A special message used for authenticated users
+
+These secrets are automatically mounted as environment variables in the pod:
+- `GREETING_API_KEY`
+- `GREETING_MESSAGE`
+
+You can modify the secrets using:
+```bash
+kubectl create secret generic greeting-secret \
+  --from-literal=greeting.api-key=YourNewSecretKey \
+  --from-literal=greeting.custom-message=YourCustomMessage \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+### Auto-scaling
+
+The application is configured with Horizontal Pod Autoscaler (HPA) to automatically scale based on resource usage:
+
+- Minimum replicas: 1
+- Maximum replicas: 5
+- CPU target utilization: 70%
+- Memory target utilization: 80%
+
+You can check the current scaling status with:
+```bash
+kubectl get hpa
+kubectl describe hpa greeting-app-hpa
+```
+
 ## How It Works
 
 1. The autoconfigure module defines the `GreetingProperties` class that binds to the `greeting.*` properties in the application configuration.
